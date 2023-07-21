@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from "react";
+import studentApi from "./api/studentApi";
 
 function App() {
+const [students, setStudents] = useState([])
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      
+      const studentsList = await studentApi.getAll();
+
+      // Giới hạn số lượng sinh viên hiển thị bằng phương thức slice
+      const limitedStudents = studentsList.slice(0, 5);
+      setStudents(limitedStudents);
+    }
+
+    fetchStudents();
+  }, [])
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+      {students.map((student) => (
+          <li key={student.id}>{student.name}</li>
+        ))}
+      </ul>
     </div>
   );
 }
